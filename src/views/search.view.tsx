@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
-import { Formik, Field, FormikProps } from 'formik';
-import SearchInput from '../styles/SearchInput';
-import SearchContainer from '../styles/SearchContainer';
+import { Formik } from 'formik';
+import SearchInput from '../styles/searchInput';
+import SearchContainer from '../styles/searchContainer';
 
 
 type Props = {

@@ -145,6 +145,7 @@ const moveTaskToInProgress = () => {
 };
   
 return (
+  
   <div className="kanban-container">
     <div className="header">
       <h2>TABLERO KANBAN</h2>

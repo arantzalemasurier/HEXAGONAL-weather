@@ -1,16 +1,13 @@
 import React, {useState} from 'react';
-import './App.css';
+import './app.css';
 import axios  from "axios";
-
-import {weatherForecast} from './Api'
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Kanban from './domain/kanban';
-import Loader from './domain/Loader';
+import Loader from './domain/loader';
 import WeatherView from './views/weather.view';
 import { WeatherPresenter } from './views/weather.presenter';
 import SearchView from './views/search.view';
-
-
+import { weatherForecast } from './api';
 
 interface State {
     weatherPresenter: WeatherPresenter;
