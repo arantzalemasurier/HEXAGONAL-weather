@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import './app.css';
+import './app.css'
 import axios  from "axios";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Kanban from './domain/kanban';

@@ -11,11 +11,10 @@ type Props = {
   submit: (value: string) => void;
 };
 
-const SearchView: React.FC<Props> = ({ value, showResult, change, submit }) => {
+const SearchView: React.FC<Props> = ({ submit }) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   return (
-    /// <reference types="formik" />
     <Formik
       initialValues={{
         searchInput: ''
@@ -26,7 +25,7 @@ const SearchView: React.FC<Props> = ({ value, showResult, change, submit }) => {
         setSubmitting(false);
       }}
     >
-      {({ values, handleChange, handleSubmit, isSubmitting }: { 
+      {({ values, handleChange, handleSubmit }: { 
         values: { searchInput: string };
         handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
         handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
@@ -38,7 +37,7 @@ const SearchView: React.FC<Props> = ({ value, showResult, change, submit }) => {
             name="searchInput"
             value={values.searchInput}
             onChange={handleChange}
-            placeholder="Ejemplo: Madrid, España"
+            placeholder="Ejemplo: Málaga, España"
             ref={inputRef}
           />
         </SearchContainer>

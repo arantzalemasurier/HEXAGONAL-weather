@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./kanban.css";
+import "../styles/kanban.css";
 import CreateTaskModal from './createTaskModal';
 
 interface Task {

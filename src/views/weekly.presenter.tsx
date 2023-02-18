@@ -4,6 +4,18 @@ export interface WeeklyPresenter {
   render(weekData: WeatherData[]): void;
 }
 
+export interface WeeklyView {
+  render(formattedData: FormattedWeatherData[]): void;
+}
+
+export interface FormattedWeatherData {
+  title: string;
+  icon: string;
+  tempRange: string;
+  main: string;
+  desc: string;
+}
+
 export class WeeklyPresenterImpl implements WeeklyPresenter {
   constructor(private view: WeeklyView) {}
 
@@ -20,14 +32,3 @@ export class WeeklyPresenterImpl implements WeeklyPresenter {
   }
 }
 
-export interface WeeklyView {
-  render(formattedData: FormattedWeatherData[]): void;
-}
-
-export interface FormattedWeatherData {
-  title: string;
-  icon: string;
-  tempRange: string;
-  main: string;
-  desc: string;
-}

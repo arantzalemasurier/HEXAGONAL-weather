@@ -1,7 +1,6 @@
 import { createGlobalStyle } from 'styled-components'
 
 const GlobalStyles = createGlobalStyle`
-
   @keyframes lds-ripple {
     0% {
         top: 36px;

@@ -1,16 +1,10 @@
-import { CardMedia, Typography } from '@material-ui/core';
-import styled from 'styled-components';
+import { Typography } from '@material-ui/core';
 import { LocalInfo } from '../domain/localInfo';
-
+import StyledCardMedia from '../styles/localInfo.style';
 
 interface Props {
   today: LocalInfo['today'];
 }
-
-const StyledCardMedia = styled(CardMedia)`
-  text-align: center;
-  margin: 7% auto;
-`;
 
 const LocalInfoView: React.FC<Props> = ({ today }) => {
   let city = '';
