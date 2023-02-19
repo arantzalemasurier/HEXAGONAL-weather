@@ -1,6 +1,7 @@
 import { useState } from "react";
-import "../styles/kanban.css";
 import CreateTaskModal from './createTaskModal';
+import { Header, Boards, ButtonsContainer, Board, Tasks, Task, TaskButtons, CreateTaskButton, CreateButton, DeleteButton, KanbanContainer, TaskH4, TaskP } from '../styles/kanban.style';
+
 
 interface Task {
   name: string;
@@ -146,40 +147,40 @@ const moveTaskToInProgress = () => {
   
 return (
   
-  <div className="kanban-container">
-    <div className="header">
+  <KanbanContainer>
+    <Header>
       <h2>TABLERO KANBAN</h2>
-    </div>
-    <div className="boards">
+    </Header>
+    <Boards>
       {boards.map((board, index) => (
-        <div className="board" key={index}>
+        <Board key={index}>
           <h3>{board.name}</h3>
-          <div className="tasks">
+          <Tasks>
             {board.tasks.map((task, taskIndex) => (
-              <div className="task" key={taskIndex}>
+              <Task key={taskIndex}>
               <input
                 type="checkbox"
                 checked={task.checked}
                 onChange={() => toggleChecked(task.id)}
               />
-              <h4>{task.name}</h4>
-              <p>{task.description}</p>
-              <p><b>Asignado a:</b> {task.assignedTo}</p>
-              <p><b>Fecha de vencimiento:</b> {task.dueDate}</p>
-              <div className="task-buttons">
+              <TaskH4>{task.name}</TaskH4>
+              <TaskP>{task.description}</TaskP>
+              <TaskP><b>Asignado a:</b> {task.assignedTo}</TaskP>
+              <TaskP><b>Fecha de vencimiento:</b> {task.dueDate}</TaskP>
+              <TaskButtons>
               {board.name === "To Do" && (
                 <button onClick={() => moveTaskToInProgress()}>En Progreso</button>
               )}
               {board.name === "In Progress" && (
                 <button onClick={() => moveTask(task)}>Realizada</button>
               )}
-            </div>
-            </div>
+            </TaskButtons>
+            </Task>
             ))}
-          </div>
-        </div>
+          </Tasks>
+        </Board>
       ))}
-    </div>
+    </Boards>
     {showForm && (
       <CreateTaskModal 
       show={showForm} 
@@ -187,11 +188,11 @@ return (
       onSubmit={(name, description, dueDate, assignedTo) => addTask(name, description, dueDate, assignedTo)} 
       />
   )}
-    <div className="buttons-container">
-      <button className="create-button" onClick={() => setShowForm(!showForm)}>Crear tarea</button>
-      <button className="delete-button" onClick={deleteChecked}>Borrar tarea</button>
-    </div>
-  </div>
+    <ButtonsContainer>
+      <CreateButton onClick={() => setShowForm(!showForm)}>Crear tarea</CreateButton>
+      <DeleteButton onClick={deleteChecked}>Borrar tarea</DeleteButton>
+    </ButtonsContainer>
+  </KanbanContainer>
 );
 }
 

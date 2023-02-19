@@ -6,6 +6,16 @@ export const KanbanContainer = styled.div`
   height: 100%;
 `;
 
+export const Header = styled.div`
+  background-color: rgba(128, 128, 128, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+`;
+
 export const Boards = styled.div`
   display: flex;
   justify-content: space-between;
@@ -37,18 +47,10 @@ export const Task = styled.div`
   border-radius: 10px;
   margin-bottom: 20px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-
-  h4 {
-    margin-bottom: 8px;
-  }
-
-  p {
-    margin: 0;
-  }
 `;
 
 export const TaskButtons = styled.div`
-  margin-top: 20px; /* Agregamos un margen de 20px */
+  margin-top: 20px;
   display: flex;
   justify-content: space-between;
 `;
@@ -86,12 +88,10 @@ export const DeleteButton = styled.button`
   cursor: pointer;
 `;
 
-export const Header = styled.div`
-  background-color: rgba(128, 128, 128, 0.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px;
-  margin-top: 20px;
-  margin-bottom: 20px;
+export const TaskH4 = styled.h4`
+  margin-bottom: 8px;
+`;
+
+export const TaskP = styled.p`
+  margin: 0;
 `;
