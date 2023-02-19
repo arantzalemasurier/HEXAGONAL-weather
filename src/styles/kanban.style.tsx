@@ -1,60 +1,59 @@
-.kanban-container {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
+import styled from 'styled-components';
 
-.header {
-  background-color: rgba(128, 128, 128, 0.1);
+export const KanbanContainer = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px;
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
-  
-.boards {
+  flex-direction: column;
+  height: 100%;
+`;
+
+export const Boards = styled.div`
   display: flex;
   justify-content: space-between;
-}
+`;
 
-.buttons-container {
+export const ButtonsContainer = styled.div`
   position: fixed;
   bottom: 20px;
   right: 20px;
   display: flex;
-}
-  
-.board {
+`;
+
+export const Board = styled.div`
   width: 33%;
   padding: 20px;
   background-color: rgba(226, 228, 230, 0.5);
   border-radius: 10px;
-}
-  
-.tasks {
+`;
+
+export const Tasks = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: 20px;
-}  
-  
-.task {
+`;
+
+export const Task = styled.div`
   background-color: #fff;
   padding: 10px;
   border-radius: 10px;
   margin-bottom: 20px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-}
 
-.task-buttons {
+  h4 {
+    margin-bottom: 8px;
+  }
+
+  p {
+    margin: 0;
+  }
+`;
+
+export const TaskButtons = styled.div`
   margin-top: 20px; /* Agregamos un margen de 20px */
   display: flex;
   justify-content: space-between;
-}
-  
+`;
 
-.create-task-button {
+export const CreateTaskButton = styled.button`
   background-color: green;
   color: #fff;
   padding: 10px 20px;
@@ -63,9 +62,9 @@
   font-size: 16px;
   font-weight: bold;
   margin-top: 20px;
-}
-  
-.create-button {
+`;
+
+export const CreateButton = styled.button`
   background-color: #81C784;
   color: #FFFFFF;
   border: none;
@@ -74,9 +73,9 @@
   text-align: center;
   font-size: 16px;
   cursor: pointer;
-}
-  
-.delete-button {
+`;
+
+export const DeleteButton = styled.button`
   background-color: #E57373;
   color: #FFFFFF;
   border: none;
@@ -85,12 +84,14 @@
   text-align: center;
   font-size: 16px;
   cursor: pointer;
-}
-  
-.task h4 {
-  margin-bottom: 8px;
-}
-  
-.task p {
-  margin: 0;
-}
+`;
+
+export const Header = styled.div`
+  background-color: rgba(128, 128, 128, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+`;

@@ -20,12 +20,12 @@ const WeatherView: React.FC<WeatherProps> = ({ today, weekly }) => {
         <Grid item xs={12} sm={6}>
           <WeatherCard>
             <LocalInfoView today={today} />
-              <div>
-                <button onClick={handleClick}>Ir a Kanban</button>
-              </div>
+            <div>
+              <button onClick={handleClick}>Ir a Kanban</button>
+            </div>
           </WeatherCard> 
         </Grid>  
-        <Grid item xs={12} sm={6}>   
+        <Grid item xs={12} sm={6} justifyContent="flex-end">   
           <WeatherCard>
             <TodayView today={today} />
           </WeatherCard>
@@ -38,6 +38,6 @@ const WeatherView: React.FC<WeatherProps> = ({ today, weekly }) => {
       </Grid>
     </Root>
   );
-};
+}  
 
 export default WeatherView;

@@ -40,10 +40,10 @@ const TodayView: React.FC<TodayProps> = ({ today }) => {
         </Left>
         <Right>
           <Typography variant="h6" gutterBottom>
-            <UnitIcon src={'http://openweathermap.org/img/wn/01d@2x.png'} alt="Logo" /> {sunrise} A.M.
+            <UnitIcon src={'http://openweathermap.org/img/wn/01d@2x.png'} alt="Logo" /> {sunrise} AM
           </Typography>
           <Typography variant="h6" gutterBottom>
-            <UnitIcon src={'http://openweathermap.org/img/wn/01n@2x.png'} alt="Logo" /> {sunset} P.M.
+            <UnitIcon src={'http://openweathermap.org/img/wn/01n@2x.png'} alt="Logo" /> {sunset} PM
           </Typography>
         </Right>
       </Main>
