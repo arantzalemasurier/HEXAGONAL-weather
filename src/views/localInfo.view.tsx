@@ -1,12 +1,14 @@
 import { Typography } from '@material-ui/core';
 import { LocalInfo } from '../domain/localInfo';
 import StyledCardMedia from '../styles/localInfo.style';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   today: LocalInfo['today'];
 }
 
 const LocalInfoView: React.FC<Props> = ({ today }) => {
+  const { t } = useTranslation();
   let city = '';
   let country = '';
   let date = '';
@@ -22,13 +24,16 @@ const LocalInfoView: React.FC<Props> = ({ today }) => {
   return (
     <StyledCardMedia>
       <Typography variant="h3" gutterBottom>
-        {city}, {country}
+        {t('CIUDAD')}: {city} 
+      </Typography>
+      <Typography variant="h3" gutterBottom>
+        {country}
       </Typography>
       <Typography variant="h5" gutterBottom>
-        {date}
+        {t('FECHA')}: {date}
       </Typography>
       <Typography variant="h6" gutterBottom>
-        Población: {population.toLocaleString()}
+        {t('POBLACIÓN')}: {population.toLocaleString()}
       </Typography>
     </StyledCardMedia>
   );

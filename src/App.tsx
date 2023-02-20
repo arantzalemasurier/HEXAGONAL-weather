@@ -145,7 +145,7 @@ interface State {
                   month: 'long',
                   day: 'numeric',
                 }).toUpperCase(),
-              desc: data.weather[0].description.charAt(0).toUpperCase() + data.weather[0].description.slice(1),
+              desc: data.weather[0].description.charAt(0).toUpperCase() + data.weather[0].description.slice(1).toLocaleLowerCase('es'),
               icon: data.weather[0].icon,
               hTemp: Math.floor(data.temp.max),
               lTemp: Math.floor(data.temp.min),
