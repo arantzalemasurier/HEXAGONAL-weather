@@ -22,30 +22,26 @@ interface Props {
 }
 
 const CreateTaskModal: React.FC<Props> = ({ show, onClose, onSubmit, tasks }) => {
-  const [name, setName] = React.useState("");
+  //const [ setName] = React.useState("");
   const [description, setDescription] = React.useState("");
   const [dueDate, setDueDate] = React.useState("");
   const [assignedTo, setAssignedTo] = React.useState("");
-  const taskNumber = tasks.length + 1;
+  const taskId = tasks.length + 1;
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const taskName = `Tarea ${taskNumber}`;
+    const taskName = `Tarea ${taskId}`;
     onSubmit(taskName, description, dueDate, assignedTo);
     onClose();
-    setName("");
+    //setName("");
   };
 
   return (
     <div className={`modal ${show ? "show" : ""}`}>
       <form onSubmit={handleSubmit}>
         <div className="input-container">
-          <label>Nombre:</label>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
+          <label>ID:</label>
+          <input type="text" readOnly value="" />
         </div>
         <div className="input-container">
           <label>Descripción:</label>

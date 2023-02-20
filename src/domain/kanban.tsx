@@ -84,24 +84,22 @@ const Kanban = () => {
   };
   
   const toggleChecked = (id: number) => {
-    const toDoBoardIndex = boards.findIndex(board => board.name === "To Do");
-    const taskIndex = boards[toDoBoardIndex].tasks.findIndex(task => task.id === id);
-    if (taskIndex === -1) {
+    const boardIndex = boards.findIndex(board => board.tasks.some(task => task.id === id));
+    if (boardIndex === -1) {
       return;
     }
+    const taskIndex = boards[boardIndex].tasks.findIndex(task => task.id === id);
     setBoards(boards => {
-      const updatedTasks = [...boards[toDoBoardIndex].tasks];
+      const updatedTasks = [...boards[boardIndex].tasks];
       updatedTasks[taskIndex] = { ...updatedTasks[taskIndex], checked: !updatedTasks[taskIndex].checked };
       return [
-        {
-          ...boards[0],
-          tasks: updatedTasks,
-        },
-        ...boards.slice(1),
+        ...boards.slice(0, boardIndex),
+        { ...boards[boardIndex], tasks: updatedTasks },
+        ...boards.slice(boardIndex + 1),
       ];
     });
-  };  
-
+  };
+  
   const deleteChecked = () => {
     setBoards((boards) =>
       boards.map((board) => {
