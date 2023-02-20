@@ -1,24 +1,39 @@
 import React from "react";
-import './modal.css';
+import "./modal.css";
+
+interface Task {
+  id: number;
+  name: string;
+  description: string;
+  dueDate: string;
+  assignedTo: string;
+}
 
 interface Props {
   show: boolean;
   onClose: () => void;
-  onSubmit: (name: string, description: string, dueDate: string, assignedTo: string) => void;
+  onSubmit: (
+    name: string,
+    description: string,
+    dueDate: string,
+    assignedTo: string
+  ) => void;
+  tasks: Task[];
 }
 
-const CreateTaskModal: React.FC<Props> = ({ show, onClose, onSubmit }) => {
+const CreateTaskModal: React.FC<Props> = ({ show, onClose, onSubmit, tasks }) => {
   const [name, setName] = React.useState("");
   const [description, setDescription] = React.useState("");
   const [dueDate, setDueDate] = React.useState("");
   const [assignedTo, setAssignedTo] = React.useState("");
+  const taskNumber = tasks.length + 1;
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    onSubmit(name, description, dueDate, assignedTo);
-    setTimeout(() => {
-      onClose();
-    }, 0);
+    const taskName = `Tarea ${taskNumber}`;
+    onSubmit(taskName, description, dueDate, assignedTo);
+    onClose();
+    setName("");
   };
 
   return (
@@ -37,7 +52,7 @@ const CreateTaskModal: React.FC<Props> = ({ show, onClose, onSubmit }) => {
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            rows={10} 
+            rows={10}
           />
         </div>
         <div className="input-container">

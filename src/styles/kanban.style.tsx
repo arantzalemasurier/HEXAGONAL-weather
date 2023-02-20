@@ -55,17 +55,6 @@ export const TaskButtons = styled.div`
   justify-content: space-between;
 `;
 
-export const CreateTaskButton = styled.button`
-  background-color: green;
-  color: #fff;
-  padding: 10px 20px;
-  border-radius: 5px;
-  border: none;
-  font-size: 16px;
-  font-weight: bold;
-  margin-top: 20px;
-`;
-
 export const CreateButton = styled.button`
   background-color: #81C784;
   color: #FFFFFF;

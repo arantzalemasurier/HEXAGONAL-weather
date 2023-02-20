@@ -1,15 +1,13 @@
 import { useState } from "react";
 import CreateTaskModal from './createTaskModal';
-import { Header, Boards, ButtonsContainer, Board, Tasks, Task, TaskButtons, CreateTaskButton, CreateButton, DeleteButton, KanbanContainer, TaskH4, TaskP } from '../styles/kanban.style';
-
+import { Header, Boards, ButtonsContainer, Board, Tasks, Task, TaskButtons, CreateButton, DeleteButton, KanbanContainer, TaskH4, TaskP } from '../styles/kanban.style';
 
 interface Task {
+  id: number;
   name: string;
   description: string;
-  checked: boolean;
-  assignedTo: string;
   dueDate: string;
-  id: number;
+  assignedTo: string;
 }
 
 const Kanban = () => {
@@ -38,16 +36,29 @@ const Kanban = () => {
 
   const [showForm, setShowForm] = useState(false);
 
+  const getLastId = () => {
+    let lastId = 0;
+    boards.forEach(board => {
+      board.tasks.forEach(task => {
+        if (task.id > lastId) {
+          lastId = task.id;
+        }
+      });
+    });
+    return lastId;
+  };
+
   const addTask = (name: string, description: string, dueDate: string, assignedTo: string) => {
+    const lastId = getLastId();
     const newTask = {
-      name,
+      name: `Tarea ${lastId + 1}`,
       description,
       checked: false,
       assignedTo: "Nadie",
       dueDate: "Ninguna",
-      id: boards[0].tasks.length + 1
+      id: lastId + 1,
     };
-    setBoards(boards => {
+    setBoards((boards) => {
       return [
         {
           ...boards[0],
@@ -55,7 +66,7 @@ const Kanban = () => {
             ...boards[0].tasks,
             {
               id: newTask.id,
-              name,
+              name: newTask.name,
               description,
               checked: false,
               dueDate,
@@ -66,26 +77,30 @@ const Kanban = () => {
         ...boards.slice(1),
       ];
     });
-  };
-
-  
+  };  
 
   const isEqual = (a: Task, b: Task) => {
     return a.id === b.id;
   };
   
-  
   const toggleChecked = (id: number) => {
-    setBoards(
-      boards.map(board => ({
-        ...board,
-        tasks: board.tasks.map(task =>
-          task.id === id ? { ...task, checked: !task.checked } : task
-        )
-      }))
-    );
-  };
-
+    const toDoBoardIndex = boards.findIndex(board => board.name === "To Do");
+    const taskIndex = boards[toDoBoardIndex].tasks.findIndex(task => task.id === id);
+    if (taskIndex === -1) {
+      return;
+    }
+    setBoards(boards => {
+      const updatedTasks = [...boards[toDoBoardIndex].tasks];
+      updatedTasks[taskIndex] = { ...updatedTasks[taskIndex], checked: !updatedTasks[taskIndex].checked };
+      return [
+        {
+          ...boards[0],
+          tasks: updatedTasks,
+        },
+        ...boards.slice(1),
+      ];
+    });
+  };  
 
   const deleteChecked = () => {
     setBoards((boards) =>
@@ -121,32 +136,32 @@ const Kanban = () => {
     });
   };
 
-const moveTaskToInProgress = () => {
-  setBoards(boards => {
-    const toDoBoard = boards.find(board => board.name === "To Do");
-    if (!toDoBoard) {
-      return boards;
-    }
-    const inProgressBoard = boards.find(board => board.name === "In Progress");
-    if (!inProgressBoard) {
-      return boards;
-    }
-    const toDoTasks = toDoBoard.tasks.filter(task => !task.checked);
-    const movedTasks = toDoBoard.tasks.filter(task => task.checked).map(task => ({...task, checked: false}));
-    return boards.map(board => {
-      if (board === toDoBoard) {
-        return { ...board, tasks: toDoTasks };
+  const moveTaskToInProgress = () => {
+    setBoards(boards => {
+      const toDoBoardIndex = boards.findIndex(board => board.name === "To Do");
+      if (toDoBoardIndex === -1) {
+        return boards;
       }
-      if (board === inProgressBoard) {
-        return { ...board, tasks: [...board.tasks, ...movedTasks] };
+      const inProgressBoardIndex = boards.findIndex(board => board.name === "In Progress");
+      if (inProgressBoardIndex === -1) {
+        return boards;
       }
-      return board;
+      const toDoBoard = boards[toDoBoardIndex];
+      const inProgressBoard = boards[inProgressBoardIndex];
+      const toDoTasks = toDoBoard.tasks.filter(task => !task.checked);
+      const movedTasks = toDoBoard.tasks.filter(task => task.checked).map(task => ({...task, checked: false}));
+      const updatedToDoBoard = {...toDoBoard, tasks: toDoTasks};
+      const updatedInProgressBoard = {...inProgressBoard, tasks: [...inProgressBoard.tasks, ...movedTasks]};
+      return [
+        ...boards.slice(0, toDoBoardIndex),
+        updatedToDoBoard,
+        updatedInProgressBoard,
+        ...boards.slice(inProgressBoardIndex + 1)
+      ];
     });
-  });
-};
+  };  
   
 return (
-  
   <KanbanContainer>
     <Header>
       <h2>TABLERO KANBAN</h2>
@@ -183,17 +198,16 @@ return (
     </Boards>
     {showForm && (
       <CreateTaskModal 
-      show={showForm} 
-      onClose={() => setShowForm(false)} 
-      onSubmit={(name, description, dueDate, assignedTo) => addTask(name, description, dueDate, assignedTo)} 
-      />
+        show={showForm}
+        onClose={() => setShowForm(false)}
+        onSubmit={(name, description, dueDate, assignedTo) => addTask(name, description, dueDate, assignedTo)} tasks={[]}      />
   )}
     <ButtonsContainer>
       <CreateButton onClick={() => setShowForm(!showForm)}>Crear tarea</CreateButton>
       <DeleteButton onClick={deleteChecked}>Borrar tarea</DeleteButton>
     </ButtonsContainer>
   </KanbanContainer>
-);
+  );
 }
 
 export default Kanban;
