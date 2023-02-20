@@ -1,9 +1,15 @@
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 export const KanbanContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
+`;
+
+export const Title = styled.h2`
+  flex: 12; /* Ocupar todo el espacio disponible entre el botón y el borde izquierdo del contenedor */
+  text-align: center; /* Centrar el título */
 `;
 
 export const Header = styled.div`
@@ -83,4 +89,23 @@ export const TaskH4 = styled.h4`
 
 export const TaskP = styled.p`
   margin: 0;
+  word-break: break-word;
+`;
+
+export const SearchLink = styled(Link)`
+  background-color: #ffffff;
+  color: black;
+  padding: 7px 10px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-size: 15px;
+  border: 1px solid gray;
+  margin: 0 10px;
+`;
+
+export const RightAlignedContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex: 1;
 `;

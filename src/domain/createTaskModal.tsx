@@ -1,7 +1,7 @@
 import React from "react";
 import "./modal.css";
 
-interface Task {
+export interface Task {
   id: number;
   name: string;
   description: string;
@@ -22,7 +22,6 @@ interface Props {
 }
 
 const CreateTaskModal: React.FC<Props> = ({ show, onClose, onSubmit, tasks }) => {
-  //const [ setName] = React.useState("");
   const [description, setDescription] = React.useState("");
   const [dueDate, setDueDate] = React.useState("");
   const [assignedTo, setAssignedTo] = React.useState("");
@@ -33,7 +32,13 @@ const CreateTaskModal: React.FC<Props> = ({ show, onClose, onSubmit, tasks }) =>
     const taskName = `Tarea ${taskId}`;
     onSubmit(taskName, description, dueDate, assignedTo);
     onClose();
-    //setName("");
+  };
+
+  const handleDescriptionChange = (e: { target: { value: string; }; }) => {
+    const value = e.target.value;
+    if (value.length <= 200) {
+      setDescription(value);
+    }
   };
 
   return (
@@ -47,9 +52,12 @@ const CreateTaskModal: React.FC<Props> = ({ show, onClose, onSubmit, tasks }) =>
           <label>Descripción:</label>
           <textarea
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            onChange={handleDescriptionChange}
             rows={10}
           />
+        <div>
+          {description.length} / 200 caracteres restantes
+        </div>
         </div>
         <div className="input-container">
           <label>Asignado a:</label>

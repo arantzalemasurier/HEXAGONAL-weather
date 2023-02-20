@@ -1,6 +1,6 @@
 import { useState } from "react";
 import CreateTaskModal from './createTaskModal';
-import { Header, Boards, ButtonsContainer, Board, Tasks, Task, TaskButtons, CreateButton, DeleteButton, KanbanContainer, TaskH4, TaskP } from '../styles/kanban.style';
+import { Header, Boards, ButtonsContainer, Board, Tasks, Task, TaskButtons, CreateButton, DeleteButton, KanbanContainer, TaskH4, TaskP, RightAlignedContainer, SearchLink, Title } from '../styles/kanban.style';
 
 interface Task {
   id: number;
@@ -15,21 +15,21 @@ const Kanban = () => {
     {
       name: "To Do",
       tasks: [
-        { name: "Tarea 1", description: "Esta es la descripción de la tarea 1", checked: false, assignedTo: "Juan", dueDate: "2022-12-01", id: 1 },
-        { name: "Tarea 2", description: "Esta es la descripción de la tarea 2", checked: false, assignedTo: "Maria", dueDate: "2022-11-30", id: 2},
+        { name: "Tarea 1", description: "Esta es la descripción de la tarea 1", checked: false, assignedTo: "Lola", dueDate: "2022-12-01", id: 1 },
+        { name: "Tarea 2", description: "Esta es la descripción de la tarea 2", checked: false, assignedTo: "Carla", dueDate: "2022-11-30", id: 2},
       ],
     },
     {
       name: "In Progress",
       tasks: [
-        { name: "Tarea 3", description: "Esta es la descripción de la tarea 3", checked: false, assignedTo: "Juan", dueDate: "2022-12-01", id: 3 },
+        { name: "Tarea 3", description: "Esta es la descripción de la tarea 3", checked: false, assignedTo: "Lucas", dueDate: "2022-12-01", id: 3 },
       ],
     },
     {
       name: "Done",
       tasks: [
-        { name: "Tarea 4", description: "Esta es la descripción de la tarea 4", checked: false, assignedTo: "Juan", dueDate: "2022-12-01", id: 4 },
-        { name: "Tarea 5", description: "Esta es la descripción de la tarea 5", checked: false, assignedTo: "Juan", dueDate: "2022-12-01", id: 5 },
+        { name: "Tarea 4", description: "Esta es la descripción de la tarea 4", checked: false, assignedTo: "Marco", dueDate: "2022-12-01", id: 4 },
+        { name: "Tarea 5", description: "Esta es la descripción de la tarea 5", checked: false, assignedTo: "Nico", dueDate: "2022-12-01", id: 5 },
       ],
     },
   ]);
@@ -103,7 +103,7 @@ const Kanban = () => {
   const deleteChecked = () => {
     setBoards((boards) =>
       boards.map((board) => {
-        const tasks = board.tasks.filter((task, taskIndex) => !task.checked);
+        const tasks = board.tasks.filter((task) => !task.checked);
         return { ...board, tasks };
       })
     );
@@ -162,7 +162,10 @@ const Kanban = () => {
 return (
   <KanbanContainer>
     <Header>
-      <h2>TABLERO KANBAN</h2>
+    <Title>TABLERO KANBAN</Title>
+      <RightAlignedContainer>
+        <SearchLink to="/">Volver</SearchLink>
+      </RightAlignedContainer>
     </Header>
     <Boards>
       {boards.map((board, index) => (
