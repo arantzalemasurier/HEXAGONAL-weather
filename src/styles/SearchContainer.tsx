@@ -6,6 +6,7 @@ const SearchContainer = styled.form`
   margin: 0 auto;
   background-color: transparent;
   font-family: 'Raleway', sans-serif;
+  height: 150px;
 `;
 
 export default SearchContainer;

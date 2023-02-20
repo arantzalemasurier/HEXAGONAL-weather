@@ -17,7 +17,7 @@ export const Modal = styled.div`
   }
 `;
 
-export const Form = styled.form`
+export const Form2 = styled.form`
   background-color: #fff;
   padding: 20px;
   border-radius: 10px;
