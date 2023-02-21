@@ -1,6 +1,8 @@
 import { useState } from "react";
 import CreateTaskModal from './createTaskModal';
 import { Header, Boards, ButtonsContainer, Board, Tasks, Task, TaskButtons, CreateButton, DeleteButton, KanbanContainer, TaskH4, TaskP, RightAlignedContainer, SearchLink, Title } from '../styles/kanban.style';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 
 interface Task {
   id: number;
@@ -158,7 +160,20 @@ const Kanban = () => {
       ];
     });
   };  
-  
+
+  const moveTaskToPreviousColumn = (taskId: number) => {
+    const boardIndex = boards.findIndex(board => board.tasks.some(task => task.id === taskId));
+    const taskIndex = boards[boardIndex].tasks.findIndex(task => task.id === taskId);
+    
+    if (boardIndex > 0 && taskIndex >= 0) {
+      const previousBoard = boards[boardIndex - 1];
+      const taskToMove = boards[boardIndex].tasks[taskIndex];
+      previousBoard.tasks.splice(previousBoard.tasks.length, 0, taskToMove);
+      boards[boardIndex].tasks.splice(taskIndex, 1);
+      setBoards([...boards]);
+    }
+  };  
+
 return (
   <KanbanContainer>
     <Header>
@@ -188,10 +203,22 @@ return (
                 <button onClick={() => moveTaskToInProgress()}>En Progreso</button>
               )}
               {board.name === "En Progreso" && (
+              <>
+                <button onClick={() => moveTaskToPreviousColumn(task.id)}>
+                  <FontAwesomeIcon icon={faChevronLeft} />
+                  </button>
                 <button onClick={() => moveTask(task)}>Realizada</button>
+              </>
               )}
-            </TaskButtons>
-            </Task>
+              {board.name === "Realizada" && (
+              <>
+                <button onClick={() => moveTaskToPreviousColumn(task.id)}>
+                <FontAwesomeIcon icon={faChevronLeft} />
+                </button>
+              </>
+              )}
+              </TaskButtons>
+              </Task>
             ))}
           </Tasks>
         </Board>
