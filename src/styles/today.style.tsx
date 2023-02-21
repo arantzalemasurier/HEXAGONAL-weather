@@ -10,7 +10,7 @@ const Left = styled.div`
 `;
 
 const Right = styled.div`
-  width:50%;
+  width: 50%;
   text-align: right;
 `;
 
@@ -24,13 +24,9 @@ const WeatherIcon = styled.img`
 `;
 
 const UnitIcon = styled.img`
-  width: 22px;
-  height: 22px;
-  margin: 0 4px 0 20px;
+  width: 25px;
+  height: 25px;
+  margin: 1 4px 0 20px;
 `;
 
-const UnitIcon1 = styled(UnitIcon)`
-  font-size: 15px;
-`;
-
-export { Main, Left, Right, Bottom, WeatherIcon, UnitIcon, UnitIcon1 };
+export { Main, Left, Right, Bottom, WeatherIcon, UnitIcon };

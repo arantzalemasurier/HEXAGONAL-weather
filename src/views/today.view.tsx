@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography, CardContent } from '@material-ui/core';
 import { TodayViewModel } from '../domain/today.mapper';
-import { Main, Left, Right, Bottom, WeatherIcon, UnitIcon, UnitIcon1 } from '../styles/today.style';
+import { Main, Left, Right, Bottom, WeatherIcon, UnitIcon } from '../styles/today.style';
 
 interface TodayProps {
   today: TodayViewModel;
@@ -30,11 +30,11 @@ const TodayView: React.FC<TodayProps> = ({ today }) => {
     <CardContent>
       <Main>
         <Left>
-          <WeatherIcon src={weatherIconSrc} alt={icon} />
+        <WeatherIcon src={weatherIconSrc} alt={icon} />
           <Typography variant="h3" gutterBottom>
             {temp}°C
           </Typography>
-          <Typography variant="h6" gutterBottom>
+          <Typography variant="h5" gutterBottom>
             {main}, {desc}
           </Typography>
         </Left>
@@ -47,8 +47,9 @@ const TodayView: React.FC<TodayProps> = ({ today }) => {
           </Typography>
         </Right>
       </Main>
+      <br></br><br></br><br></br>
       <Bottom>
-        <UnitIcon1 src={'http://openweathermap.org/img/wn/50d@2x.png'} alt="Logo" />
+        <UnitIcon src={'http://openweathermap.org/img/wn/50d@2x.png'} alt="Logo" />
         <span>{pressure} hPa</span>
         <UnitIcon src={'http://openweathermap.org/img/wn/13d@2x.png'} alt="Logo" />
         <span>{humidity} %</span>
