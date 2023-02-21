@@ -15,23 +15,23 @@ const WeatherView: React.FC<WeatherProps> = ({ today, weekly }) => {
     window.location.href = '/kanban';
   };
   return (
-    <Root>
-      <Grid container spacing={5}>
+    <Root className="my-root">
+      <Grid container spacing={5} justifyContent="center">
         <Grid item xs={12} sm={6}>
           <WeatherCard>
+          <div>
+            <button onClick={handleClick}>Ir a Kanban</button>
+          </div> 
             <LocalInfoView today={today} />
           </WeatherCard> 
         </Grid>  
-        <Grid item xs={12} sm={6} justifyContent="flex-end">   
+        <Grid item xs={12} sm={6}>   
           <WeatherCard>
             <TodayView today={today} />
           </WeatherCard>
         </Grid>
         <Grid item xs={12}>
           <WeatherCard>
-          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <button onClick={handleClick}>Ir a Kanban</button>
-            </div>
             <WeeklyView weekData={weekly} />
           </WeatherCard>
         </Grid>

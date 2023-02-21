@@ -99,7 +99,7 @@ export const SearchLink = styled(Link)`
   border-radius: 10px;
   text-decoration: none;
   font-size: 15px;
-  border: 1px solid gray;
+  border: 1px solid #ccc;
   margin: 0 10px;
 `;
 
