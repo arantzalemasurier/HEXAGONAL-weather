@@ -109,3 +109,41 @@ export const RightAlignedContainer = styled.div`
   justify-content: flex-end;
   flex: 1;
 `;
+
+export const AddColumnContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin-top: 0px;
+`;
+
+export const NewColumnNameInput = styled.input`
+  height: 35px;
+  padding: 0 16px;
+  background-color: transparent;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0px 2px 8px rgba(136, 125, 125, 0.15);
+  margin-bottom: 10px;
+  margin-left: 8px;
+
+   &:focus {
+    outline: 0px solid #b9b0b0;
+    background-color: #ffffff;
+    border-radius: none;
+  }
+`;
+
+export const Button = styled.button`
+  position: relative;
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  min-width: 0px;
+
+  svg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+`;

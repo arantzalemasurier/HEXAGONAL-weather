@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { SetStateAction, useState } from "react";
 import CreateTaskModal from './createTaskModal';
-import { Header, Boards, ButtonsContainer, Board, Tasks, Task, TaskButtons, CreateButton, DeleteButton, KanbanContainer, TaskH4, TaskP, RightAlignedContainer, SearchLink, Title } from '../styles/kanban.style';
+import { Header, Boards, ButtonsContainer, AddColumnContainer, NewColumnNameInput, Board, Tasks, Task, TaskButtons, CreateButton, DeleteButton, KanbanContainer, TaskH4, TaskP, RightAlignedContainer, SearchLink, Title } from '../styles/kanban.style';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+import { faChevronLeft, faTimes, faCheck  } from '@fortawesome/free-solid-svg-icons';
+import { Button } from "@material-ui/core";
 
 interface Task {
   id: number;
@@ -37,6 +38,31 @@ const Kanban = () => {
   ]);
 
   const [showForm, setShowForm] = useState(false);
+  const [newColumnName, setNewColumnName] = useState("");
+
+  const addColumn = () => {
+    const newColumn = {
+      name: newColumnName,
+      tasks: []
+    };
+    setBoards(boards => [...boards, newColumn]);
+    setNewColumnName("");
+  };
+
+  const handleNewColumnNameChange = (event: { target: { value: SetStateAction<string>; }; }) => {
+    setNewColumnName(event.target.value);
+  };
+
+  const deleteColumn = (columnName: string) => {
+    setBoards((boards) => {
+      const index = boards.findIndex((board) => board.name === columnName);
+      if (index === -1) {
+        return boards;
+      }
+      return [...boards.slice(0, index), ...boards.slice(index + 1)];
+    });
+  };
+
 
   const getLastId = () => {
     let lastId = 0;
@@ -174,67 +200,83 @@ const Kanban = () => {
     }
   };  
 
-return (
-  <KanbanContainer>
-    <Header>
-    <Title>TABLERO KANBAN</Title>
-      <RightAlignedContainer>
-        <SearchLink to="/">Volver</SearchLink>
-      </RightAlignedContainer>
-    </Header>
-    <Boards>
-      {boards.map((board, index) => (
-        <Board key={index}>
-          <h3>{board.name}</h3>
-          <Tasks>
-            {board.tasks.map((task, taskIndex) => (
-              <Task key={taskIndex}>
-              <input
-                type="checkbox"
-                checked={task.checked}
-                onChange={() => toggleChecked(task.id)}
-              />
-              <TaskH4>{task.name}</TaskH4>
-              <TaskP>{task.description}</TaskP>
-              <TaskP><b>Asignado a:</b> {task.assignedTo}</TaskP>
-              <TaskP><b>Fecha de vencimiento:</b> {task.dueDate}</TaskP>
-              <TaskButtons>
-              {board.name === "Pendiente" && (
-                <button onClick={() => moveTaskToInProgress()}>En Progreso</button>
-              )}
-              {board.name === "En Progreso" && (
-              <>
-                <button onClick={() => moveTaskToPreviousColumn(task.id)}>
-                  <FontAwesomeIcon icon={faChevronLeft} />
-                  </button>
-                <button onClick={() => moveTask(task)}>Realizada</button>
-              </>
-              )}
-              {board.name === "Realizada" && (
-              <>
-                <button onClick={() => moveTaskToPreviousColumn(task.id)}>
-                <FontAwesomeIcon icon={faChevronLeft} />
-                </button>
-              </>
-              )}
-              </TaskButtons>
-              </Task>
-            ))}
-          </Tasks>
-        </Board>
-      ))}
-    </Boards>
-    {showForm && (
-      <CreateTaskModal 
-        show={showForm}
-        onClose={() => setShowForm(false)}
-        onSubmit={(name, description, dueDate, assignedTo) => addTask(name, description, dueDate, assignedTo)} tasks={[]}      />
-  )}
-    <ButtonsContainer>
-      <CreateButton onClick={() => setShowForm(!showForm)}>Crear tarea</CreateButton>
-      <DeleteButton onClick={deleteChecked}>Borrar tarea</DeleteButton>
-    </ButtonsContainer>
-  </KanbanContainer>
+  return (
+    <KanbanContainer>
+      <Header>
+        <Title>TABLERO KANBAN</Title>
+        <RightAlignedContainer>
+          <SearchLink to="/">Volver</SearchLink>
+        </RightAlignedContainer>
+      </Header>
+      <AddColumnContainer>
+        <NewColumnNameInput
+          type="text"
+          placeholder=" Ingresa una nueva columna"
+          value={newColumnName}
+          onChange={handleNewColumnNameChange}
+        />
+        <Button onClick={addColumn}>
+        <FontAwesomeIcon icon={faCheck} />
+      </Button>
+      </AddColumnContainer>
+      <Boards>
+        {boards.map((board, index) => (
+          <Board key={index}>
+            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+              <h3>{board.name}</h3>
+              <button onClick={() => deleteColumn(board.name)} style={{border: 'none', backgroundColor: 'transparent', cursor: 'pointer'}}>
+                <FontAwesomeIcon icon={faTimes} />
+              </button>
+            </div>
+            <Tasks>
+              {board.tasks.map((task, taskIndex) => (
+                <Task key={taskIndex}>
+                  <input
+                    type="checkbox"
+                    checked={task.checked}
+                    onChange={() => toggleChecked(task.id)}
+                  />
+                  <TaskH4>{task.name}</TaskH4>
+                  <TaskP>{task.description}</TaskP>
+                  <TaskP><b>Asignado a:</b> {task.assignedTo}</TaskP>
+                  <TaskP><b>Fecha de vencimiento:</b> {task.dueDate}</TaskP>
+                  <TaskButtons>
+                    {board.name === "Pendiente" && (
+                      <button onClick={() => moveTaskToInProgress()}>En Progreso</button>
+                    )}
+                    {board.name === "En Progreso" && (
+                      <>
+                        <button onClick={() => moveTaskToPreviousColumn(task.id)}>
+                          <FontAwesomeIcon icon={faChevronLeft} />
+                        </button>
+                        <button onClick={() => moveTask(task)}>Realizada</button>
+                      </>
+                    )}
+                    {board.name === "Realizada" && (
+                      <>
+                        <button onClick={() => moveTaskToPreviousColumn(task.id)}>
+                          <FontAwesomeIcon icon={faChevronLeft} />
+                        </button>
+                      </>
+                    )}
+                  </TaskButtons>
+                </Task>
+              ))}
+            </Tasks>
+          </Board>
+        ))}
+      </Boards>
+      {showForm && (
+        <CreateTaskModal 
+          show={showForm}
+          onClose={() => setShowForm(false)}
+          onSubmit={(name, description, dueDate, assignedTo) => addTask(name, description, dueDate, assignedTo)} tasks={[]}      />
+      )}
+      <ButtonsContainer>
+        <CreateButton onClick={() => setShowForm(!showForm)}>Crear tarea</CreateButton>
+        <DeleteButton onClick={deleteChecked}>Borrar tarea</DeleteButton>
+      </ButtonsContainer>
+    </KanbanContainer>
   );
 }
 
