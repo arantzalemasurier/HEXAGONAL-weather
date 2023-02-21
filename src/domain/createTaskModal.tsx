@@ -77,7 +77,7 @@ const CreateTaskModal: React.FC<Props> = ({ show, onClose, onSubmit, tasks }) =>
         </div>
         <div className="buttons">
           <button onClick={onClose}>Cancelar</button>
-          <button type="submit">Agregar tarea</button>
+          <button type="submit">Añadir tarea</button>
         </div>
       </form>
     </div>
