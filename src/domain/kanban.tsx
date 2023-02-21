@@ -13,20 +13,20 @@ interface Task {
 const Kanban = () => {
   const [boards, setBoards] = useState([
     {
-      name: "To Do",
+      name: "Pendiente",
       tasks: [
         { name: "Tarea 1", description: "Esta es la descripción de la tarea 1", checked: false, assignedTo: "Lola", dueDate: "2022-12-01", id: 1 },
         { name: "Tarea 2", description: "Esta es la descripción de la tarea 2", checked: false, assignedTo: "Carla", dueDate: "2022-11-30", id: 2},
       ],
     },
     {
-      name: "In Progress",
+      name: "En Progreso",
       tasks: [
         { name: "Tarea 3", description: "Esta es la descripción de la tarea 3", checked: false, assignedTo: "Lucas", dueDate: "2022-12-01", id: 3 },
       ],
     },
     {
-      name: "Done",
+      name: "Realizada",
       tasks: [
         { name: "Tarea 4", description: "Esta es la descripción de la tarea 4", checked: false, assignedTo: "Marco", dueDate: "2022-12-01", id: 4 },
         { name: "Tarea 5", description: "Esta es la descripción de la tarea 5", checked: false, assignedTo: "Nico", dueDate: "2022-12-01", id: 5 },
@@ -111,8 +111,8 @@ const Kanban = () => {
 
   const moveTask = (task: Task) => {
     setBoards(boards => {
-      const inProgressIndex = boards.findIndex(board => board.name === "In Progress");
-      const doneIndex = boards.findIndex(board => board.name === "Done");
+      const inProgressIndex = boards.findIndex(board => board.name === "En Progreso");
+      const doneIndex = boards.findIndex(board => board.name === "Realizada");
       const inProgressTasks = [...boards[inProgressIndex].tasks];
       const taskIndex = inProgressTasks.findIndex(bTask => isEqual(bTask, task));
   
@@ -136,11 +136,11 @@ const Kanban = () => {
 
   const moveTaskToInProgress = () => {
     setBoards(boards => {
-      const toDoBoardIndex = boards.findIndex(board => board.name === "To Do");
+      const toDoBoardIndex = boards.findIndex(board => board.name === "Pendiente");
       if (toDoBoardIndex === -1) {
         return boards;
       }
-      const inProgressBoardIndex = boards.findIndex(board => board.name === "In Progress");
+      const inProgressBoardIndex = boards.findIndex(board => board.name === "En Progreso");
       if (inProgressBoardIndex === -1) {
         return boards;
       }
@@ -184,10 +184,10 @@ return (
               <TaskP><b>Asignado a:</b> {task.assignedTo}</TaskP>
               <TaskP><b>Fecha de vencimiento:</b> {task.dueDate}</TaskP>
               <TaskButtons>
-              {board.name === "To Do" && (
+              {board.name === "Pendiente" && (
                 <button onClick={() => moveTaskToInProgress()}>En Progreso</button>
               )}
-              {board.name === "In Progress" && (
+              {board.name === "En Progreso" && (
                 <button onClick={() => moveTask(task)}>Realizada</button>
               )}
             </TaskButtons>
