@@ -2,7 +2,7 @@ import { SetStateAction, useState } from "react";
 import CreateTaskModal from './createTaskModal';
 import { Header, Boards, ButtonsContainer, AddColumnContainer, NewColumnNameInput, Board, Tasks, Task, TaskButtons, CreateButton, DeleteButton, KanbanContainer, TaskH4, TaskP, RightAlignedContainer, SearchLink, Title } from '../styles/kanban.style';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronLeft, faTimes, faCheck, faChevronRight  } from '@fortawesome/free-solid-svg-icons';
+import { faChevronLeft, faTimes, faCheck, faChevronRight, faEdit  } from '@fortawesome/free-solid-svg-icons';
 import { Button } from "@material-ui/core";
 
 interface Task {
@@ -101,6 +101,18 @@ const Kanban = () => {
       return prevBoards;
     });
   };
+
+  const editColumnName = (columnName: string, newColumnName: string) => {
+    setBoards((boards) => {
+      const index = boards.findIndex((board) => board.name === columnName);
+      if (index === -1) {
+        return boards;
+      }
+      const newBoards = [...boards];
+      newBoards[index] = { ...newBoards[index], name: newColumnName };
+      return newBoards;
+    });
+  };  
 
   const getLastId = () => {
     let lastId = 0;
@@ -219,109 +231,124 @@ const Kanban = () => {
     });
   };
   
-return (
-  <KanbanContainer>
-    <Header>
-      <Title>TABLERO KANBAN</Title>
-      <RightAlignedContainer>
-        <SearchLink to="/">Volver</SearchLink>
-      </RightAlignedContainer>
-    </Header>
-    <AddColumnContainer>
-      <NewColumnNameInput
-        type="text"
-        placeholder=" Ingresa una nueva columna"
-        value={newColumnName}
-        onChange={handleNewColumnNameChange}
-      />
-      <Button onClick={addColumn}>
-        <FontAwesomeIcon icon={faCheck} />
-      </Button>
-    </AddColumnContainer>
-    <Boards>
-      {boards.map((board, index) => (
-        <Board key={index}>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <h3>{board.name}</h3>
-            <div>
-              {index > 0 && (
+  return (
+    <KanbanContainer>
+      <Header>
+        <Title>TABLERO KANBAN</Title>
+        <RightAlignedContainer>
+          <SearchLink to="/">Volver</SearchLink>
+        </RightAlignedContainer>
+      </Header>
+      <AddColumnContainer>
+        <NewColumnNameInput
+          type="text"
+          placeholder=" Ingresa una nueva columna"
+          value={newColumnName}
+          onChange={handleNewColumnNameChange}
+        />
+        <Button onClick={addColumn}>
+          <FontAwesomeIcon icon={faCheck} />
+        </Button>
+      </AddColumnContainer>
+      <Boards>
+        {boards.map((board, index) => (
+          <Board key={index}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <h3>{board.name}</h3>
+              <div>
+                {index > 0 && (
+                  <button
+                    onClick={() => moveColumn("left", board.name)}
+                    style={{
+                      border: "none",
+                      backgroundColor: "transparent",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faChevronLeft} />
+                  </button>
+                )}
+                {index < boards.length - 1 && (
+                  <button
+                    onClick={() => moveColumn("right", board.name)}
+                    style={{
+                      border: "none",
+                      backgroundColor: "transparent",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faChevronRight} />
+                  </button>
+                )}
                 <button
-                  onClick={() => moveColumn("left", board.name)}
+                  onClick={() => {
+                    const newColumnName = prompt("Ingresa un nuevo nombre para la columna");
+                    if (newColumnName !== null) {
+                      editColumnName(board.name, newColumnName);
+                      }
+                    }}                  
+                    style={{
+                    border: "none",
+                    backgroundColor: "transparent",
+                    cursor: "pointer",
+                  }}
+                >
+                  <FontAwesomeIcon icon={faEdit} />
+                </button>
+                <button
+                  onClick={() => deleteColumn(board.name)}
                   style={{
                     border: "none",
                     backgroundColor: "transparent",
                     cursor: "pointer",
                   }}
                 >
-                  <FontAwesomeIcon icon={faChevronLeft} />
+                  <FontAwesomeIcon icon={faTimes} />
                 </button>
-              )}
-              {index < boards.length - 1 && (
-                <button
-                  onClick={() => moveColumn("right", board.name)}
-                  style={{
-                    border: "none",
-                    backgroundColor: "transparent",
-                    cursor: "pointer",
-                  }}
-                >
-                  <FontAwesomeIcon icon={faChevronRight} />
-                </button>
-              )}
-              <button
-                onClick={() => deleteColumn(board.name)}
-                style={{
-                  border: "none",
-                  backgroundColor: "transparent",
-                  cursor: "pointer",
-                }}
-              >
-                <FontAwesomeIcon icon={faTimes} />
-              </button>
+              </div>
             </div>
-          </div>
-          <Tasks>
-            {board.tasks.map((task, taskIndex) => (
-          <Task key={task.id}>
-          <input
-            type="checkbox"
-            checked={task.checked}
-            onChange={() => toggleChecked(task.id)}
-          />
-          <TaskH4>{task.name}</TaskH4>
-          <TaskP>{task.description}</TaskP>
-          <TaskP>
-            <b>Asignado a:</b> {task.assignedTo}
-          </TaskP>
-          <TaskP>
-            <b>Fecha de vencimiento:</b> {task.dueDate}
-          </TaskP>
-          <TaskButtons
-            style={{
-            display: "flex",
-            justifyContent: "flex-start",
-            }}
-          >
-            <button onClick={() => moveTask("left", task)}>
-              <FontAwesomeIcon icon={faChevronLeft} />
-            </button>
-            <button onClick={() => moveTask("right", task)}>
-              <FontAwesomeIcon icon={faChevronRight} />
-            </button>
-          </TaskButtons>
-        </Task>
-        ))}
-        </Tasks>
-        </Board>
-        ))}
-        </Boards>
-          {showForm && (
+            <Tasks>
+              {board.tasks.map((task, taskIndex) => (
+            <Task key={task.id}>
+            <input
+              type="checkbox"
+              checked={task.checked}
+              onChange={() => toggleChecked(task.id)}
+            />
+            <TaskH4>{task.name}</TaskH4>
+            <TaskP>{task.description}</TaskP>
+            <TaskP>
+              <b>Asignado a:</b> {task.assignedTo}
+            </TaskP>
+            <TaskP>
+              <b>Fecha de vencimiento:</b> {task.dueDate}
+            </TaskP>
+            <TaskButtons
+              style={{
+              display: "flex",
+              justifyContent: "flex-start",
+              }}
+            >
+              <button onClick={() => moveTask("left", task)}>
+                <FontAwesomeIcon icon={faChevronLeft} />
+              </button>
+              <button onClick={() => moveTask("right", task)}>
+                <FontAwesomeIcon icon={faChevronRight} />
+              </button>
+            </TaskButtons>
+          </Task>
+          ))}
+          </Tasks>
+          </Board>
+          ))}
+          </Boards>
+            {showForm && (
           <CreateTaskModal
             show={showForm}
             onClose={() => setShowForm(false)}

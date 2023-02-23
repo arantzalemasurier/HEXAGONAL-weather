@@ -37,7 +37,7 @@ export const ButtonsContainer = styled.div`
 export const Board = styled.div`
   width: 33%;
   padding: 20px;
-  background-color: rgba(226, 228, 230, 0.5);
+  background-color: rgba(129, 137, 145, 0.226);
   border-radius: 10px;
 `;
 
@@ -124,7 +124,9 @@ export const NewColumnNameInput = styled.input`
   border-radius: 5px;
   box-shadow: 0px 2px 8px rgba(136, 125, 125, 0.15);
   margin-bottom: 10px;
-  margin-left: 8px;
+  margin-left: 1260px;
+  border-radius: 10px;
+  border-width: 3px;
 
    &:focus {
     outline: 0px solid #b9b0b0;
