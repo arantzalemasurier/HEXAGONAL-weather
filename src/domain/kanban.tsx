@@ -1,11 +1,9 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { SetStateAction, useState } from "react";
 import CreateTaskModal from './createTaskModal';
 import { Header, Boards, ButtonsContainer, AddColumnContainer, NewColumnNameInput, Board, Tasks, Task, TaskButtons, CreateButton, DeleteButton, KanbanContainer, TaskH4, TaskP, RightAlignedContainer, SearchLink, Title } from '../styles/kanban.style';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faTimes, faCheck, faChevronRight  } from '@fortawesome/free-solid-svg-icons';
 import { Button } from "@material-ui/core";
-import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
-
 
 interface Task {
   id: number;
@@ -14,6 +12,12 @@ interface Task {
   dueDate: string;
   assignedTo: string;
   checked: boolean;
+}
+
+interface Board {
+  id: number;
+  name: string;
+  tasks: Task[];
 }
 
 const Kanban = () => {
@@ -45,6 +49,7 @@ const Kanban = () => {
 
   const [showForm, setShowForm] = useState(false);
   const [newColumnName, setNewColumnName] = useState("");
+
   
   const newId = Math.max(...boards.map(board => board.id)) + 1;
   const addColumn = () => {
@@ -53,8 +58,8 @@ const Kanban = () => {
       name: newColumnName,
       tasks: []
     };
-    setBoards(boards => [...boards, newColumn]);
     setNewColumnName("");
+    setBoards(boards => [...boards, newColumn]);
   };
 
   const handleNewColumnNameChange = (event: { target: { value: SetStateAction<string>; }; }) => {
@@ -128,17 +133,17 @@ const Kanban = () => {
             {
               id: newTask.id,
               name: newTask.name,
-              description,
-              checked: false,
-              dueDate,
-              assignedTo,
+              description: newTask.description, // Coma en lugar de puntos suspensivos
+              checked: newTask.checked,
+              assignedTo: newTask.assignedTo,
+              dueDate: newTask.dueDate,
             },
           ],
         },
         ...boards.slice(1),
       ];
     });
-  };  
+  };
 
   const isEqual = (a: Task, b: Task) => {
     return a.id === b.id;
@@ -180,99 +185,39 @@ const Kanban = () => {
     );
   };
 
-const moveTask = (direction: string, task: Task) => {
-  setBoards(boards => {
-    const columnIndex = boards.findIndex(board => board.tasks.includes(task));
-
-    if (columnIndex === -1) {
-      return boards;
-    }
-
-    const taskIndex = boards[columnIndex].tasks.findIndex(bTask => isEqual(bTask, task));
-    const targetIndex = direction === "left" ? columnIndex - 1 : columnIndex + 1;
-
-    if (targetIndex < 0 || targetIndex >= boards.length) {
-      return boards;
-    }
-
-    const newTasks = [...boards[targetIndex].tasks, {...task, checked: false}];
-    const updatedTargetColumn = {...boards[targetIndex], tasks: newTasks};
-    const newColumnTasks = [...boards[columnIndex].tasks.slice(0, taskIndex), ...boards[columnIndex].tasks.slice(taskIndex + 1)];
-    const updatedColumn = {...boards[columnIndex], tasks: newColumnTasks};
-    const newBoards = boards.map((board, index) => {
-      if (index === columnIndex) {
-        return updatedColumn;
-      } else if (index === targetIndex) {
-        return updatedTargetColumn;
-      } else {
-        return board;
+  const moveTask = (direction: "left" | "right", task: Task, destinationTaskIndex: number): void => {
+    setBoards((boards: Board[]): Board[] => {
+      const currentColumnIndex: number = boards.findIndex((board: Board) => board.tasks.includes(task));
+    
+      if (currentColumnIndex === -1) {
+        return boards;
       }
-    });
-
-    return newBoards;
-  });
-};
-interface Board {
-  id: number;
-  name: string;
-  tasks: Task[];
-}
-
-const handleOnDragEnd = (result: DropResult, boards: Board[], setBoards: Dispatch<SetStateAction<Board[]>>, board: Board) => {
-  const { source, destination } = result;
-
-  // dropped outside the list
-  if (!destination) {
-    return;
-  }
-
-  const sourceBoardIndex = Number(source.droppableId);
-  const destinationBoardIndex = Number(destination.droppableId);
-  const sourceTaskIndex = source.index;
-  const destinationTaskIndex = destination.index;
-
-  // Move within the same list
-  if (sourceBoardIndex === destinationBoardIndex) {
-    setBoards((prevBoards) => {
-      const newBoards = [...prevBoards];
-      const tasks = [...newBoards[sourceBoardIndex].tasks];
-      const [removed] = tasks.splice(sourceTaskIndex, 1);
-      tasks.splice(destinationTaskIndex, 0, removed);
-      newBoards[sourceBoardIndex].tasks = tasks;
+    
+      const targetColumnIndex: number = direction === "left" ? currentColumnIndex - 1 : currentColumnIndex + 1;
+    
+      if (targetColumnIndex < 0 || targetColumnIndex >= boards.length) {
+        return boards;
+      }
+    
+      const currentColumnTasks: Task[] = [...boards[currentColumnIndex].tasks];
+      const taskIndex: number = currentColumnTasks.findIndex((bTask: Task) => isEqual(bTask, task));
+    
+      if (taskIndex === -1) {
+        return boards;
+      }
+    
+      const targetColumnTasks: Task[] = [...boards[targetColumnIndex].tasks];
+      targetColumnTasks.splice(destinationTaskIndex, 0, {...task, checked: false});
+    
+      currentColumnTasks.splice(taskIndex, 1);
+    
+      const newBoards: Board[] = [...boards];
+      newBoards[currentColumnIndex] = {...boards[currentColumnIndex], tasks: currentColumnTasks};
+      newBoards[targetColumnIndex] = {...boards[targetColumnIndex], tasks: targetColumnTasks};
+    
       return newBoards;
     });
-  } else {
-    // Move between lists
-    setBoards((prevBoards) => {
-      const newBoards = [...prevBoards];
-      const sourceTasks = [...newBoards[sourceBoardIndex].tasks];
-      const [removed] = sourceTasks.splice(sourceTaskIndex, 1);
-      const destinationTasks = [...newBoards[destinationBoardIndex].tasks];
-      destinationTasks.splice(destinationTaskIndex, 0, removed);
-      newBoards[sourceBoardIndex].tasks = sourceTasks;
-      newBoards[destinationBoardIndex].tasks = destinationTasks;
-      return newBoards;
-    });
-
-    // Add task to the destination column
-    const task = boards[sourceBoardIndex].tasks[sourceTaskIndex];
-    const newId = getLastId() + 1;
-    setBoards((prevBoards) => {
-      const newBoards = [...prevBoards];
-      const destinationTasks = [...newBoards[destinationBoardIndex].tasks];
-      destinationTasks.splice(destinationTaskIndex, 0, {
-        ...task,
-        id: newId,
-      });
-      newBoards[destinationBoardIndex].tasks = destinationTasks;
-      return newBoards;
-    });
-  }
-};
-
-const handleOnDragEndWrapper = (result: DropResult, boards: Board[], setBoards: Dispatch<SetStateAction<Board[]>>, board: Board) => (event: Event) => {
-  handleOnDragEnd(result, boards, setBoards, board);
-};
+  };
 
 return (
   <KanbanContainer>
@@ -342,61 +287,50 @@ return (
             </div>
           </div>
           <Tasks>
-          <DragDropContext onDragEnd={(result) => handleOnDragEndWrapper(result, boards, setBoards, board)}>
-            <Droppable droppableId={board.name}>
-              {(provided) => (
-                <div {...provided.droppableProps} ref={provided.innerRef}>
-                  {board.tasks.map((task, taskIndex) => (
-                    <Draggable key={task.id} draggableId={`${task.id}`} index={taskIndex}>
-                      {(provided) => (
-                        <Task ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                          <input
-                            type="checkbox"
-                            checked={task.checked}
-                            onChange={() => toggleChecked(task.id)}
-                          />
-                          <TaskH4>{task.name}</TaskH4>
-                          <TaskP>{task.description}</TaskP>
-                          <TaskP>
-                            <b>Asignado a:</b> {task.assignedTo}
-                          </TaskP>
-                          <TaskP>
-                            <b>Fecha de vencimiento:</b> {task.dueDate}
-                          </TaskP>
-                          <TaskButtons
-                            style={{
-                              display: "flex",
-                              justifyContent: "flex-start",
-                            }}
-                          >
-                            <button onClick={() => moveTask("left", task)}>
-                              <FontAwesomeIcon icon={faChevronLeft} />
-                            </button>
-                            <button onClick={() => moveTask("right", task)}>
-                              <FontAwesomeIcon icon={faChevronRight} />
-                            </button>
-                          </TaskButtons>
-                        </Task>
-                      )}
-                    </Draggable>
-                  ))}
-                  {provided.placeholder}
-                </div>
-              )}
-            </Droppable>
-          </DragDropContext>
-
-          </Tasks>
+            {board.tasks.map((task, taskIndex) => (
+          <Task key={task.id}>
+          <input
+            type="checkbox"
+            checked={task.checked}
+            onChange={() => toggleChecked(task.id)}
+          />
+          <TaskH4>{task.name}</TaskH4>
+          <TaskP>{task.description}</TaskP>
+          <TaskP>
+            <b>Asignado a:</b> {task.assignedTo}
+          </TaskP>
+          <TaskP>
+            <b>Fecha de vencimiento:</b> {task.dueDate}
+          </TaskP>
+          <TaskButtons
+            style={{
+            display: "flex",
+            justifyContent: "flex-start",
+            }}
+          >
+            <button onClick={() => moveTask("left", task, taskIndex - 1)}>
+              <FontAwesomeIcon icon={faChevronLeft} />
+            </button>
+            <button onClick={() => moveTask("right", task, taskIndex - 1)}>
+              <FontAwesomeIcon icon={faChevronRight} />
+            </button>
+          </TaskButtons>
+        </Task>
+        ))}
+        </Tasks>
         </Board>
-      ))}
-
-  </Boards>
-      {showForm && (
-        <CreateTaskModal 
-          show={showForm}
-          onClose={() => setShowForm(false)}
-          onSubmit={(name, description, dueDate, assignedTo) => addTask(name, description, dueDate, assignedTo)} tasks={[]}      />
-      )}
+        ))}
+        </Boards>
+          {showForm && (
+          <CreateTaskModal
+            show={showForm}
+            onClose={() => setShowForm(false)}
+            onSubmit={(name, description, dueDate, assignedTo) =>
+            addTask(name, description, dueDate, assignedTo)
+            }
+            tasks={[]}
+          />
+          )}
       <ButtonsContainer>
         <CreateButton onClick={() => setShowForm(!showForm)}>Crear tarea</CreateButton>
         <DeleteButton onClick={deleteChecked}>Borrar tarea</DeleteButton>
