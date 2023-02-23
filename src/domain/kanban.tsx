@@ -185,40 +185,40 @@ const Kanban = () => {
     );
   };
 
-  const moveTask = (direction: "left" | "right", task: Task, destinationTaskIndex: number): void => {
+  const moveTask = (direction: "left" | "right", task: Task): void => {
     setBoards((boards: Board[]): Board[] => {
       const currentColumnIndex: number = boards.findIndex((board: Board) => board.tasks.includes(task));
-    
+  
       if (currentColumnIndex === -1) {
         return boards;
       }
-    
+  
       const targetColumnIndex: number = direction === "left" ? currentColumnIndex - 1 : currentColumnIndex + 1;
-    
+  
       if (targetColumnIndex < 0 || targetColumnIndex >= boards.length) {
         return boards;
       }
-    
+  
       const currentColumnTasks: Task[] = [...boards[currentColumnIndex].tasks];
       const taskIndex: number = currentColumnTasks.findIndex((bTask: Task) => isEqual(bTask, task));
-    
+  
       if (taskIndex === -1) {
         return boards;
       }
-    
+  
       const targetColumnTasks: Task[] = [...boards[targetColumnIndex].tasks];
-      targetColumnTasks.splice(destinationTaskIndex, 0, {...task, checked: false});
-    
+      targetColumnTasks.splice(targetColumnTasks.length, 0, {...task, checked: false});
+  
       currentColumnTasks.splice(taskIndex, 1);
-    
+  
       const newBoards: Board[] = [...boards];
       newBoards[currentColumnIndex] = {...boards[currentColumnIndex], tasks: currentColumnTasks};
       newBoards[targetColumnIndex] = {...boards[targetColumnIndex], tasks: targetColumnTasks};
-    
+  
       return newBoards;
     });
   };
-
+  
 return (
   <KanbanContainer>
     <Header>
@@ -308,10 +308,10 @@ return (
             justifyContent: "flex-start",
             }}
           >
-            <button onClick={() => moveTask("left", task, taskIndex - 1)}>
+            <button onClick={() => moveTask("left", task)}>
               <FontAwesomeIcon icon={faChevronLeft} />
             </button>
-            <button onClick={() => moveTask("right", task, taskIndex - 1)}>
+            <button onClick={() => moveTask("right", task)}>
               <FontAwesomeIcon icon={faChevronRight} />
             </button>
           </TaskButtons>
